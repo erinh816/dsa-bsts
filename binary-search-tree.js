@@ -12,6 +12,7 @@ class Node {
 
   findRecursively(val) {
 
+
   }
 
   /** insertRecursively(val): Starting at the invoking node, insert a new node
@@ -19,7 +20,23 @@ class Node {
 
   insertRecursively(val) {
 
+    if (val < this.val) { // if left is smaller than right
+      if (!this.left) { // does left exist?
+        this.left = new Node(val); // set right to new node and return right
+        return this.left;
+      }
+      return this.left.insertRecursively(val);  // else try again 
+
+    } else { // if right is greater than left
+      if (!this.right) {  // right does not exist?
+        this.right = new Node(val); // set right to new node and return right
+        return this.right;
+      }
+      return this.right.insertRecursively(val); // else try again 
+    }
+
   }
+
 
   /** dfsPreOrder(): Traverse from the invoking node using pre-order DFS.
   * Returns an array of visited nodes. */
@@ -55,25 +72,48 @@ class BinarySearchTree {
 
   insert(val) {
     const newNode = new Node(val);
-    if(!this.root) this.root = newNode;
+    if (!this.root) {
+      this.root = newNode;
+      return this;
+    };
 
+    let previousNode = null;
     let current = this.root;
 
-    while(current){
-      compareNode = (newNode.val < current.val)? current.right : current.left;
-      
+    while (current) {
+      previousNode = current;
+
+      if (newNode.val < current.val) {
+        current = current.left;
+
+        if (!current) {
+          previousNode.left = newNode;
+          return this;
+        }
+
+      } else {
+        current = current.right;
+
+        if (!current) {
+          previousNode.right = newNode;
+          return this;
+        }
+      }
+
     }
-
-    current = newNode;
-
-    return this;
   }
 
   /** insertRecursively(val): Insert a new node into the BST with value val.
    * Returns the tree instance. Uses recursion. */
 
   insertRecursively(val) {
-
+    let node = new Node(val);
+    if (!this.root) {
+      this.root = node;
+    } else {
+      this.root.insertRecursively(val);
+    }
+    return this;
   }
 
   /** find(val): Search the BST for a node with value val.
